@@ -60,10 +60,10 @@ graph TD
     J & K & L -- "Indexes Sample Data" --> T
 
     %% Labs <> Infrastructure & Tools
-    M -- "Indexes & Queries Data"
-    N -- "Executes Load Tester"
-    P -- "Stops/Starts Containers"
-    Q -- "Runs Advanced Queries"
+    M -- "Indexes & Queries Data" --> A
+    N -- "Executes Load Tester" --> O
+    P -- "Stops/Starts Containers" --> A
+    Q -- "Runs Advanced Queries" --> A
 
     %% Documentation <> Everything
     W -- "Links to" --> Y
