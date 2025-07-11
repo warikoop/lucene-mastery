@@ -1,86 +1,153 @@
 # 🗺️ Project Architecture & Dependency Graph
 
-This document provides a visual representation of the project's architecture. It shows how the different components, from the core Docker configuration to the individual labs and documentation files, are interconnected.
+This document provides a visual representation of the project's architecture. The main diagram below shows the high-level components. **Click on a component to jump to its detailed diagram.**
+
+## Master Architecture Diagram
 
 ```mermaid
 graph TD
-    subgraph "📍 Core Infrastructure"
-        A[docker-compose.yml]:::core
+    subgraph "Orchestration"
+        A[Core Infrastructure]:::core
+        B[Scripts]:::scripts
     end
 
-    subgraph "🔧 Configuration Files (configs)"
-        B(nginx/nginx.conf) --> C(nginx/upstream-config.conf)
-        D(elasticsearch/elasticsearch.yml + jvm.options)
-        E(solr/solr.xml + solrconfig.xml)
-        F(opensearch/opensearch.yml + jvm.options)
-        G(elasticsearch/index-templates/blog_posts_template.json)
-        H(solr/collections/blog_posts_schema.json)
+    subgraph "Assets"
+        C[Configuration Files]:::configs
+        D[Data]:::data
+        E[Tools]:::tools
     end
 
-    subgraph "🚀 Setup & Orchestration (setup)"
-        I[unified-setup.sh]:::setup
-        J(elasticsearch/setup-es-ha.sh)
-        K(solr/setup-solr-ha.sh)
-        L(opensearch/setup-os-ha.sh)
+    subgraph "Learning Content"
+        F[Hands-On Labs]:::labs
+        G[Documentation]:::docs
     end
 
-    subgraph "🧪 Hands-On Labs (labs)"
-        M(Phase 1-3: Foundations & Core Concepts) --> A
-        N(Phase 4: Performance Testing) --> O[tools/concurrent-load-tester]
-        P(Phase 5: Scaling & Architecture) --> A
-        Q(Phase 6-8: Advanced Topics) --> A
-    end
+    A -- "Mounts" --> C
+    B -- "Executes" --> A
+    B -- "Applies" --> C
+    B -- "Loads" --> D
+    F -- "Uses" --> B
+    F -- "Uses" --> E
+    G -- "Explains" --> A & B & C & D & E & F
 
-    subgraph "🧰 Utilities (tools)"
-        O --> R{Go Environment}
-        S(data-generators/*.py) --> T[data/*/*.json]
-        U(monitoring/*.yml) --> V((External: Prometheus/Grafana))
-    end
+    click A "#core-infrastructure-detail" "View Core Infrastructure Details"
+    click B "#scripts-detail" "View Scripts Details"
+    click C "#configuration-files-detail" "View Configuration Details"
+    click D "#data-detail" "View Data Details"
+    click E "#tools-detail" "View Tools Details"
+    click F "#labs-detail" "View Labs Details"
+    click G "#documentation-detail" "View Documentation Details"
 
-    subgraph "📚 Documentation (docs, learning-materials, root)"
-        W[00-MASTER-LEARNING-GUIDE.md]:::docs
-        X[REORGANIZATION-GUIDE.md]:::docs
-        Y[learning-materials/*.md]:::docs
-        Z[docs/*.md]:::docs
-    end
-
-    %% --- Define Relationships ---
-
-    %% Docker <> Configs
-    A -- "Mounts Volume" --> B
-    A -- "Mounts Volume & Defines Env" --> D
-    A -- "Mounts Volume & Defines Env" --> E
-    A -- "Mounts Volume & Defines Env" --> F
-
-    %% Setup <> Configs & Data
-    I -- "Executes" --> J & K & L
-    J -- "Applies Template" --> G
-    K -- "Applies Schema" --> H
-    L -- "Applies Template" --> G
-    J & K & L -- "Indexes Sample Data" --> T
-
-    %% Labs <> Infrastructure & Tools
-    M -- "Indexes & Queries Data" --> A
-    N -- "Executes Load Tester" --> O
-    P -- "Stops/Starts Containers" --> A
-    Q -- "Runs Advanced Queries" --> A
-
-    %% Documentation <> Everything
-    W -- "Links to" --> Y
-    Y -- "Explains Concepts for" --> M & N & P & Q
-    Z -- "Provides Reference for" --> A & J & K & L
-    X -- "Defines Structure of" --> A & B & D & E & F & I & M & O & S & T & U & W & Y & Z
-
-    %% Style Definitions
     classDef core fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef setup fill:#ccf,stroke:#333,stroke-width:2px;
-    classDef docs fill:#cfc,stroke:#333,stroke-width:2px;
-
+    classDef scripts fill:#ccf,stroke:#333,stroke-width:2px;
+    classDef configs fill:#ffc,stroke:#333,stroke-width:2px;
+    classDef data fill:#fec,stroke:#333,stroke-width:2px;
+    classDef tools fill:#cff,stroke:#333,stroke-width:2px;
+    classDef labs fill:#cfc,stroke:#333,stroke-width:2px;
+    classDef docs fill:#e6e6fa,stroke:#333,stroke-width:2px;
 ```
 
-### **How to Read the Graph**
+---
 
--   **Boxes** represent files or groups of files.
--   **Arrows** indicate a dependency or relationship (e.g., "Mounts Volume", "Executes", "Explains Concepts for").
--   The graph is organized into **subgraphs** that correspond to the main directories in the project.
--   This visualization should make it clear how a change in one part of the project (like a configuration file) might affect other parts (like the setup scripts or the Docker environment).
+## Detailed Diagrams
+
+### Core Infrastructure Detail
+<a id="core-infrastructure-detail"></a>
+
+```mermaid
+graph TD
+    A[docker-compose.yml] --> B[configs/nginx]
+    A --> C[configs/elasticsearch]
+    A --> D[configs/solr]
+    A --> E[configs/opensearch]
+
+    style A fill:#f9f
+```
+
+### Scripts Detail
+<a id="scripts-detail"></a>
+
+```mermaid
+graph TD
+    A[scripts/unified-setup.sh] --> B[scripts/elasticsearch/setup-es-ha.sh]
+    A --> C[scripts/solr/setup-solr-ha.sh]
+    A --> D[scripts/opensearch/setup-os-ha.sh]
+    E[scripts/common/*] --> F[tools/*]
+    E --> G[data/*]
+
+    style A fill:#ccf
+    style E fill:#ccf
+```
+
+### Configuration Files Detail
+<a id="configuration-files-detail"></a>
+
+```mermaid
+graph TD
+    A[configs] --> B[nginx]
+    A --> C[elasticsearch]
+    A --> D[solr]
+    A --> E[opensearch]
+    C --> F[index-templates]
+    D --> G[collections]
+    E --> H[index-templates]
+
+    style A fill:#ffc
+```
+
+### Data Detail
+<a id="data-detail"></a>
+
+```mermaid
+graph TD
+    A[data] --> B[blog-posts]
+    A --> C[e-commerce]
+    A --> D[logs]
+    B --> E[20k-blog-dataset.json]
+    B --> F[blog-mapping.json]
+    B --> G[blog-schema.xml]
+
+    style A fill:#fec
+```
+
+### Tools Detail
+<a id="tools-detail"></a>
+
+```mermaid
+graph TD
+    A[tools] --> B[concurrent-load-tester]
+    A --> C[data-generators]
+    A --> D[monitoring]
+    C -- "Generates" --> E[data/*]
+    B -- "Tests" --> F[Core Infrastructure]
+
+    style A fill:#cff
+```
+
+### Labs Detail
+<a id="labs-detail"></a>
+
+```mermaid
+graph TD
+    A[labs] --> B[Phase 1-8]
+    B -- "Execute" --> C[scripts/*]
+    B -- "Interact with" --> D[Core Infrastructure]
+    B -- "Use" --> E[tools/*]
+
+    style A fill:#cfc
+```
+
+### Documentation Detail
+<a id="documentation-detail"></a>
+
+```mermaid
+graph TD
+    A[docs] --> B[*.md]
+    C[learning-materials] --> D[*.md]
+    E[root] --> F[00-MASTER-LEARNING-GUIDE.md]
+    B & D & F -- "Explain" --> G[All Other Components]
+
+    style A fill:#e6e6fa
+    style C fill:#e6e6fa
+    style E fill:#e6e6fa
+```
