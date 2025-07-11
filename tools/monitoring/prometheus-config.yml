@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'elasticsearch'
+    static_configs:
+      - targets: ['es-master-1:9200', 'es-master-2:9200', 'es-master-3:9200']
+
+  - job_name: 'solr'
+    static_configs:
+      - targets: ['solr1:8983', 'solr2:8983', 'solr3:8983']
+
+  - job_name: 'opensearch'
+    static_configs:
+      - targets: ['opensearch-node1:9200', 'opensearch-node2:9200', 'opensearch-node3:9200']
+
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx-lb:80']

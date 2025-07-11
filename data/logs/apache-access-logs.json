@@ -1,0 +1,5 @@
+{"timestamp":"2023-10-27T10:00:00Z", "client_ip":"192.168.1.1", "request":"GET /index.html HTTP/1.1", "status_code":200, "response_size":1543, "user_agent":"Mozilla/5.0 (...)"}
+{"timestamp":"2023-10-27T10:00:01Z", "client_ip":"192.168.1.2", "request":"GET /images/logo.png HTTP/1.1", "status_code":200, "response_size":5678, "user_agent":"Chrome/105.0 (...)"}
+{"timestamp":"2023-10-27T10:00:02Z", "client_ip":"192.168.1.1", "request":"GET /css/style.css HTTP/1.1", "status_code":200, "response_size":2345, "user_agent":"Mozilla/5.0 (...)"}
+{"timestamp":"2023-10-27T10:01:10Z", "client_ip":"10.0.0.5", "request":"POST /login.php HTTP/1.1", "status_code":401, "response_size":100, "user_agent":"curl/7.68.0"}
+{"timestamp":"2023-10-27T10:02:30Z", "client_ip":"172.17.0.1", "request":"GET /api/v1/users HTTP/1.1", "status_code":200, "response_size":10240, "user_agent":"Go-http-client/1.1"}

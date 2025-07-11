@@ -1,0 +1,54 @@
+# ======================== Elasticsearch Configuration =========================
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before tweaking these settings, make sure you understand what they do.
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+cluster.name: es-cluster
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node, which will be used in logging output:
+#
+node.name: es-master-1
+#
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate from the installation directory):
+#
+path.data: /usr/share/elasticsearch/data
+#
+# Path to log files:
+#
+path.logs: /usr/share/elasticsearch/logs
+#
+# ---------------------------------- Network -----------------------------------
+#
+# By default, Elasticsearch is only accessible on localhost. Set a different
+# address here to expose this node on the network:
+#
+network.host: 0.0.0.0
+#
+# By default, Elasticsearch listens for HTTP traffic on the first free port starting
+# from 9200. Set a specific port by uncommenting the following line:
+#
+#http.port: 9200
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when this node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+#
+discovery.seed_hosts: ["es-master-2", "es-master-3"]
+#
+# Bootstrap the cluster using an initial set of master-eligible nodes:
+#
+cluster.initial_master_nodes: ["es-master-1", "es-master-2", "es-master-3"]
+#
+# ---------------------------------- Various -----------------------------------
+#
+# Require explicit names when deleting indices:
+#
+action.destructive_requires_name: true

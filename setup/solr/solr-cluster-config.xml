@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 
+  🌞 Solr Cluster Configuration for Learning Environment
+  Optimized settings for SolrCloud HA learning environment with 3-node cluster + Zookeeper
+  Uses consistent HA endpoints and production-ready configurations
+-->
+
+<solr>
+  <!-- Cluster settings -->
+  <str name="host">${solr.host:}</str>
+  <int name="hostPort">${solr.port:8983}</int>
+  <str name="hostContext">${solr.context:solr}</str>
+  
+  <!-- Zookeeper connection -->
+  <str name="zkHost">${zkHost:}</str>
+  <int name="zkClientTimeout">${zkClientTimeout:30000}</int>
+  <int name="zkConnectTimeout">${zkConnectTimeout:60000}</int>
+  
+  <!-- Logging settings -->
+  <str name="genericCoreNodeNames">${genericCoreNodeNames:true}</str>
+  <int name="distribUpdateSoTimeout">${distribUpdateSoTimeout:600000}</int>
+  <int name="distribUpdateConnTimeout">${distribUpdateConnTimeout:60000}</int>
+  
+  <!-- Auto-scaling settings for learning -->
+  <str name="autoAddReplicas">false</str>
+  <int name="coreLoadThreads">3</int>
+  
+  <!-- Memory and performance settings -->
+  <str name="sharedSchema">false</str>
+  <str name="allowPaths">/var/solr/data</str>
+  
+  <!-- Collection admin settings -->
+  <requestHandler name="/admin/collections" class="solr.CollectionsHandler">
+    <lst name="defaults">
+      <str name="cluster">${solr.cluster.name:lucene-learning-cluster}</str>
+    </lst>
+  </requestHandler>
+  
+  <!-- Core admin settings -->
+  <requestHandler name="/admin/cores" class="solr.CoreAdminHandler">
+    <lst name="defaults">
+      <str name="action">STATUS</str>
+    </lst>
+  </requestHandler>
+  
+  <!-- Learning environment specific settings -->
+  <requestHandler name="/admin/info/system" class="solr.InfoHandler" />
+  <requestHandler name="/admin/info/properties" class="solr.PropertiesRequestHandler" />
+  
+  <!-- Health check settings -->
+  <requestHandler name="/admin/ping" class="solr.PingRequestHandler">
+    <lst name="invariants">
+      <str name="q">*:*</str>
+    </lst>
+    <lst name="defaults">
+      <str name="echoParams">all</str>
+      <str name="df">text</str>
+    </lst>
+  </requestHandler>
+  
+  <!-- Metrics for monitoring -->
+  <requestHandler name="/admin/metrics" class="solr.MetricsHandler">
+    <lst name="defaults">
+      <str name="compact">false</str>
+      <str name="wt">json</str>
+    </lst>
+  </requestHandler>
+  
+  <!-- Learning environment optimizations -->
+  <requestDispatcher>
+    <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="2048000" formdataUploadLimitInKB="2048" addHttpRequestToContext="false"/>
+    <httpCaching never304="true" />
+  </requestDispatcher>
+  
+  <!-- Auto-commit settings for learning -->
+  <updateHandler class="solr.DirectUpdateHandler2">
+    <updateLog>
+      <str name="dir">${solr.ulog.dir:}</str>
+      <int name="numVersionBuckets">${solr.ulog.numVersionBuckets:65536}</int>
+    </updateLog>
+    <autoCommit>
+      <maxTime>${solr.autoCommit.maxTime:15000}</maxTime>
+      <openSearcher>false</openSearcher>
+    </autoCommit>
+    <autoSoftCommit>
+      <maxTime>${solr.autoSoftCommit.maxTime:1000}</maxTime>
+    </autoSoftCommit>
+  </updateHandler>
+  
+  <!-- Query settings optimized for learning -->
+  <query>
+    <maxBooleanClauses>${solr.max.booleanClauses:1024}</maxBooleanClauses>
+    <filterCache class="solr.FastLRUCache" size="512" initialSize="512" autowarmCount="0"/>
+    <queryResultCache class="solr.LRUCache" size="512" initialSize="512" autowarmCount="0"/>
+    <documentCache class="solr.LRUCache" size="512" initialSize="512" autowarmCount="0"/>
+    <cache name="perSegFilter" class="solr.search.LRUCache" size="10" initialSize="0" autowarmCount="10" regenerator="solr.NoOpRegenerator" />
+    <enableLazyFieldLoading>true</enableLazyFieldLoading>
+    <queryResultWindowSize>20</queryResultWindowSize>
+    <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
+    <listener event="newSearcher" class="solr.QuerySenderListener">
+      <arr name="queries">
+        <lst><str name="q">*:*</str><str name="sort">timestamp desc</str></lst>
+      </arr>
+    </listener>
+    <listener event="firstSearcher" class="solr.QuerySenderListener">
+      <arr name="queries">
+        <lst><str name="q">*:*</str><str name="sort">timestamp desc</str></lst>
+      </arr>
+    </listener>
+    <useColdSearcher>false</useColdSearcher>
+  </query>
+  
+  <!-- Circuit breaker settings -->
+  <circuitBreaker class="solr.CircuitBreakerManager" enabled="true">
+    <str name="memEnabled">true</str>
+    <str name="memThreshold">75</str>
+    <str name="cpuEnabled">true</str>
+    <str name="cpuThreshold">75</str>
+  </circuitBreaker>
+  
+  <!-- JMX settings for monitoring -->
+  <jmx />
+  
+  <!-- Backup settings -->
+  <backup>
+    <repository name="local" class="org.apache.solr.core.backup.repository.LocalFileSystemRepository">
+      <str name="location">${solr.backup.repository.default.location:}</str>
+    </repository>
+  </backup>
+  
+</solr>

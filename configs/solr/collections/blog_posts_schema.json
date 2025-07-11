@@ -1,0 +1,331 @@
+{
+  "collections": [
+    {
+      "name": "blog_posts",
+      "config": {
+        "numShards": 3,
+        "replicationFactor": 2,
+        "configName": "_default"
+      },
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "indexed": true,
+            "stored": true,
+            "required": true
+          },
+          {
+            "name": "title",
+            "type": "text_general",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "content", 
+            "type": "text_general",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "author",
+            "type": "string",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "category",
+            "type": "string",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "tags",
+            "type": "strings",
+            "indexed": true,
+            "stored": true,
+            "multiValued": true
+          },
+          {
+            "name": "published_date",
+            "type": "pdate",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "view_count",
+            "type": "pint",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "like_count",
+            "type": "pint",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "score_boost",
+            "type": "pfloat",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false,
+            "default": 1.0
+          },
+          {
+            "name": "created_at",
+            "type": "pdate",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false,
+            "default": "NOW"
+          },
+          {
+            "name": "_version_",
+            "type": "plong",
+            "indexed": false,
+            "stored": false
+          }
+        ],
+        "copyFields": [
+          {
+            "source": "title",
+            "dest": "text"
+          },
+          {
+            "source": "content",
+            "dest": "text"
+          },
+          {
+            "source": "author",
+            "dest": "text"
+          }
+        ],
+        "dynamicFields": [
+          {
+            "name": "*_i",
+            "type": "pint",
+            "indexed": true,
+            "stored": true
+          },
+          {
+            "name": "*_s",
+            "type": "string",
+            "indexed": true,
+            "stored": true
+          },
+          {
+            "name": "*_l",
+            "type": "plong",
+            "indexed": true,
+            "stored": true
+          },
+          {
+            "name": "*_t",
+            "type": "text_general",
+            "indexed": true,
+            "stored": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "performance_baseline",
+      "config": {
+        "numShards": 3,
+        "replicationFactor": 2,
+        "configName": "_default"
+      },
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "indexed": true,
+            "stored": true,
+            "required": true
+          },
+          {
+            "name": "timestamp",
+            "type": "pdate",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "operation",
+            "type": "string",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "duration_ms",
+            "type": "pint",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "success",
+            "type": "boolean",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "thread_id",
+            "type": "string",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "batch_size",
+            "type": "pint",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "query_type",
+            "type": "string",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "response_time",
+            "type": "pfloat",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "error_message",
+            "type": "text_general",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "load_test",
+      "config": {
+        "numShards": 3,
+        "replicationFactor": 2,
+        "configName": "_default"
+      },
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "indexed": true,
+            "stored": true,
+            "required": true
+          },
+          {
+            "name": "test_name",
+            "type": "string",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "timestamp",
+            "type": "pdate",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "concurrent_users",
+            "type": "pint",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "requests_per_second",
+            "type": "pfloat",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "average_response_time",
+            "type": "pfloat",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          },
+          {
+            "name": "success_rate",
+            "type": "pfloat",
+            "indexed": true,
+            "stored": true,
+            "multiValued": false
+          }
+        ]
+      }
+    }
+  ],
+  "aliases": [
+    {
+      "name": "learning_content",
+      "collections": ["blog_posts"]
+    },
+    {
+      "name": "performance_tests",
+      "collections": ["performance_baseline", "load_test"]
+    }
+  ],
+  "requestHandlers": [
+    {
+      "name": "/function_score",
+      "class": "solr.SearchHandler",
+      "defaults": {
+        "defType": "edismax",
+        "qf": "title^2.0 content^1.0",
+        "pf": "title^3.0 content^1.5",
+        "bf": "sum(like_count,view_count)",
+        "boost": "if(exists(score_boost),score_boost,1.0)"
+      }
+    },
+    {
+      "name": "/learning_search",
+      "class": "solr.SearchHandler", 
+      "defaults": {
+        "defType": "edismax",
+        "qf": "title^3.0 content^1.0 author^2.0",
+        "pf": "title^5.0 content^2.0",
+        "ps": 3,
+        "qs": 3,
+        "tie": 0.1,
+        "fl": "id,title,author,category,published_date,score"
+      }
+    },
+    {
+      "name": "/performance_search",
+      "class": "solr.SearchHandler",
+      "defaults": {
+        "defType": "lucene",
+        "fl": "*,score",
+        "facet": "true",
+        "facet.field": "operation",
+        "facet.field": "success"
+      }
+    }
+  ]
+}

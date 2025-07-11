@@ -1,0 +1,48 @@
+{
+  "properties": {
+    "title": {
+      "type": "text",
+      "analyzer": "standard",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "content": {
+      "type": "text",
+      "analyzer": "standard"
+    },
+    "category": {
+      "type": "keyword"
+    },
+    "tags": {
+      "type": "keyword"
+    },
+    "author": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "published_at": {
+      "type": "date"
+    },
+    "indexed_at": {
+      "type": "date"
+    },
+    "popularity_score": {
+      "type": "float"
+    },
+    "engagement_score": {
+      "type": "float"
+    },
+    "url": {
+      "type": "keyword"
+    }
+  }
+}

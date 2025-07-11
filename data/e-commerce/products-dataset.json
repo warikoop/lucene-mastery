@@ -1,0 +1,20 @@
+{"index": {"_index": "products"}}
+{"name": "Wireless Bluetooth Headphones", "description": "Premium noise-canceling wireless headphones with 30-hour battery life and superior sound quality", "category": "Electronics", "subcategory": "Audio", "brand": "TechSound", "price": 299.99, "rating": 4.5, "review_count": 1247, "in_stock": true, "tags": ["wireless", "bluetooth", "noise-canceling", "premium"], "created_date": "2024-01-01"}
+{"index": {"_index": "products"}}
+{"name": "Gaming Mechanical Keyboard", "description": "RGB backlit mechanical gaming keyboard with custom switches and programmable macro keys", "category": "Electronics", "subcategory": "Gaming", "brand": "GameForce", "price": 149.99, "rating": 4.7, "review_count": 892, "in_stock": true, "tags": ["gaming", "mechanical", "rgb", "programmable"], "created_date": "2024-01-02"}
+{"index": {"_index": "products"}}
+{"name": "4K Ultra HD Monitor", "description": "27-inch 4K IPS monitor with HDR support and USB-C connectivity for professional work", "category": "Electronics", "subcategory": "Displays", "brand": "ViewMax", "price": 599.99, "rating": 4.3, "review_count": 567, "in_stock": false, "tags": ["4k", "monitor", "hdr", "professional"], "created_date": "2024-01-03"}
+{"index": {"_index": "products"}}
+{"name": "Smart Home Security Camera", "description": "WiFi-enabled security camera with night vision, motion detection, and cloud storage", "category": "Smart Home", "subcategory": "Security", "brand": "SecureView", "price": 89.99, "rating": 4.2, "review_count": 1456, "in_stock": true, "tags": ["smart-home", "security", "wifi", "night-vision"], "created_date": "2024-01-04"}
+{"index": {"_index": "products"}}
+{"name": "Ergonomic Office Chair", "description": "Adjustable ergonomic office chair with lumbar support and breathable mesh design", "category": "Furniture", "subcategory": "Office", "brand": "ComfortSeating", "price": 399.99, "rating": 4.6, "review_count": 723, "in_stock": true, "tags": ["ergonomic", "office", "adjustable", "lumbar-support"], "created_date": "2024-01-05"}
+{"index": {"_index": "products"}}
+{"name": "Portable SSD Drive 1TB", "description": "Ultra-fast portable SSD with USB 3.2 Gen 2 interface and hardware encryption", "category": "Electronics", "subcategory": "Storage", "brand": "DataSpeed", "price": 179.99, "rating": 4.8, "review_count": 2134, "in_stock": true, "tags": ["ssd", "portable", "fast", "encrypted"], "created_date": "2024-01-06"}
+{"index": {"_index": "products"}}
+{"name": "Fitness Tracking Smartwatch", "description": "Advanced fitness smartwatch with GPS, heart rate monitoring, and 7-day battery life", "category": "Wearables", "subcategory": "Fitness", "brand": "FitTracker", "price": 249.99, "rating": 4.4, "review_count": 1789, "in_stock": true, "tags": ["fitness", "smartwatch", "gps", "heart-rate"], "created_date": "2024-01-07"}
+{"index": {"_index": "products"}}
+{"name": "Professional Coffee Machine", "description": "Espresso machine with built-in grinder, milk frother, and programmable settings", "category": "Appliances", "subcategory": "Kitchen", "brand": "BrewMaster", "price": 899.99, "rating": 4.9, "review_count": 456, "in_stock": false, "tags": ["coffee", "espresso", "professional", "programmable"], "created_date": "2024-01-08"}
+{"index": {"_index": "products"}}
+{"name": "Wireless Charging Pad", "description": "Fast wireless charging pad compatible with all Qi-enabled devices", "category": "Electronics", "subcategory": "Accessories", "brand": "ChargeFast", "price": 39.99, "rating": 4.1, "review_count": 3456, "in_stock": true, "tags": ["wireless", "charging", "qi", "fast"], "created_date": "2024-01-09"}
+{"index": {"_index": "products"}}
+{"name": "Smart LED Light Bulbs", "description": "Pack of 4 smart LED bulbs with color changing, dimming, and app control", "category": "Smart Home", "subcategory": "Lighting", "brand": "SmartGlow", "price": 79.99, "rating": 4.3, "review_count": 2789, "in_stock": true, "tags": ["smart", "led", "color-changing", "app-control"], "created_date": "2024-01-10"}

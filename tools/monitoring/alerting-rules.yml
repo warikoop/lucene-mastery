@@ -1,0 +1,51 @@
+groups:
+- name: elasticsearch_alerts
+  rules:
+  - alert: ElasticsearchClusterRed
+    expr: elasticsearch_cluster_health_status{color="red"} == 1
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Elasticsearch cluster is RED"
+      description: "The Elasticsearch cluster health is RED. Immediate action required."
+
+  - alert: ElasticsearchNodeDown
+    expr: up{job="elasticsearch"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Elasticsearch node down"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes."
+
+- name: solr_alerts
+  rules:
+  - alert: SolrNodeDown
+    expr: up{job="solr"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Solr node down"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes."
+
+- name: opensearch_alerts
+  rules:
+  - alert: OpenSearchClusterRed
+    expr: opensearch_cluster_health_status{color="red"} == 1
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "OpenSearch cluster is RED"
+      description: "The OpenSearch cluster health is RED. Immediate action required."
+
+  - alert: OpenSearchNodeDown
+    expr: up{job="opensearch"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "OpenSearch node down"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes."

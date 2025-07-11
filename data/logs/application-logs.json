@@ -1,0 +1,5 @@
+{"timestamp":"2023-10-27T10:00:00Z", "level":"INFO", "service":"auth-service", "message":"User 'admin' logged in successfully"}
+{"timestamp":"2023-10-27T10:00:05Z", "level":"WARN", "service":"payment-service", "message":"Credit card expiration date is within 30 days for user '12345'"}
+{"timestamp":"2023-10-27T10:00:10Z", "level":"ERROR", "service":"checkout-service", "message":"Failed to process order 'ABC-123': inventory not available", "stack_trace":"..."}
+{"timestamp":"2023-10-27T10:01:15Z", "level":"INFO", "service":"shipping-service", "message":"Order 'ABC-123' shipped via 'UPS'"}
+{"timestamp":"2023-10-27T10:02:00Z", "level":"DEBUG", "service":"recommendation-service", "message":"Generated 10 recommendations for user '54321'"}

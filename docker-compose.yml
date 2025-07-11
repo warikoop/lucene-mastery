@@ -1,0 +1,259 @@
+# 🎯 Unified HA Learning Environment - Elasticsearch + Solr + OpenSearch
+
+version: '3.8'
+
+services:
+  # === ELASTICSEARCH HA CLUSTER ===
+  es-master-1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    container_name: es-master-1
+    environment:
+      - node.name=es-master-1
+      - cluster.name=es-cluster
+      - discovery.seed_hosts=es-master-2,es-master-3
+      - cluster.initial_master_nodes=es-master-1,es-master-2,es-master-3
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es-data-1:/usr/share/elasticsearch/data
+    networks:
+      - search_net
+
+  es-master-2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    container_name: es-master-2
+    environment:
+      - node.name=es-master-2
+      - cluster.name=es-cluster
+      - discovery.seed_hosts=es-master-1,es-master-3
+      - cluster.initial_master_nodes=es-master-1,es-master-2,es-master-3
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es-data-2:/usr/share/elasticsearch/data
+    networks:
+      - search_net
+
+  es-master-3:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    container_name: es-master-3
+    environment:
+      - node.name=es-master-3
+      - cluster.name=es-cluster
+      - discovery.seed_hosts=es-master-1,es-master-2
+      - cluster.initial_master_nodes=es-master-1,es-master-2,es-master-3
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es-data-3:/usr/share/elasticsearch/data
+    networks:
+      - search_net
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.10.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: http://es-master-1:9200
+    networks:
+      - search_net
+    depends_on:
+      - es-master-1
+
+  # === SOLR HA CLUSTER ===
+  zoo1:
+    image: zookeeper:3.7
+    container_name: zoo1
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
+    networks:
+      - search_net
+
+  zoo2:
+    image: zookeeper:3.7
+    container_name: zoo2
+    ports:
+      - "2182:2181"
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
+    networks:
+      - search_net
+
+  zoo3:
+    image: zookeeper:3.7
+    container_name: zoo3
+    ports:
+      - "2183:2181"
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
+    networks:
+      - search_net
+
+  solr1:
+    image: solr:9.3
+    container_name: solr1
+    ports:
+     - "8983:8983"
+    environment:
+      - ZK_HOST=zoo1:2181,zoo2:2181,zoo3:2181
+      - SOLR_HEAP=1g
+    networks:
+      - search_net
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+
+  solr2:
+    image: solr:9.3
+    container_name: solr2
+    ports:
+     - "8984:8983"
+    environment:
+      - ZK_HOST=zoo1:2181,zoo2:2181,zoo3:2181
+      - SOLR_HEAP=1g
+    networks:
+      - search_net
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+
+  solr3:
+    image: solr:9.3
+    container_name: solr3
+    ports:
+     - "8985:8983"
+    environment:
+      - ZK_HOST=zoo1:2181,zoo2:2181,zoo3:2181
+      - SOLR_HEAP=1g
+    networks:
+      - search_net
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+
+  # === OPENSEARCH HA CLUSTER ===
+  opensearch-node1:
+    image: opensearchproject/opensearch:2.8.0
+    container_name: opensearch-node1
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch-node1
+      - discovery.seed_hosts=opensearch-node2,opensearch-node3
+      - cluster.initial_cluster_manager_nodes=opensearch-node1,opensearch-node2,opensearch-node3
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "plugins.security.disabled=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - os-data-1:/usr/share/opensearch/data
+    networks:
+      - search_net
+
+  opensearch-node2:
+    image: opensearchproject/opensearch:2.8.0
+    container_name: opensearch-node2
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch-node2
+      - discovery.seed_hosts=opensearch-node1,opensearch-node3
+      - cluster.initial_cluster_manager_nodes=opensearch-node1,opensearch-node2,opensearch-node3
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "plugins.security.disabled=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - os-data-2:/usr/share/opensearch/data
+    networks:
+      - search_net
+
+  opensearch-node3:
+    image: opensearchproject/opensearch:2.8.0
+    container_name: opensearch-node3
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch-node3
+      - discovery.seed_hosts=opensearch-node1,opensearch-node2
+      - cluster.initial_cluster_manager_nodes=opensearch-node1,opensearch-node2,opensearch-node3
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "plugins.security.disabled=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - os-data-3:/usr/share/opensearch/data
+    networks:
+      - search_net
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.8.0
+    container_name: opensearch-dashboards
+    ports:
+      - 5602:5601
+    environment:
+      OPENSEARCH_HOSTS: '["http://opensearch-node1:9200"]'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
+    networks:
+      - search_net
+    depends_on:
+      - opensearch-node1
+
+  # === NGINX LOAD BALANCER ===
+  nginx-lb:
+    image: nginx:latest
+    container_name: nginx-lb
+    volumes:
+      - ./configs/nginx/:/etc/nginx/conf.d/:ro
+    ports:
+      - "9199:9199"  # Elasticsearch HA endpoint
+      - "8999:8999"  # Solr HA endpoint  
+      - "9399:9399"  # OpenSearch HA endpoint
+    networks:
+      - search_net
+    depends_on:
+      - es-master-1
+      - solr1
+      - opensearch-node1
+
+volumes:
+  es-data-1:
+  es-data-2:
+  es-data-3:
+  os-data-1:
+  os-data-2:
+  os-data-3:
+
+networks:
+  search_net:
+    driver: bridge

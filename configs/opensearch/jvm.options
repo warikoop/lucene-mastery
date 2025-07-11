@@ -1,0 +1,24 @@
+## JVM configuration
+
+# Xms represents the initial size of total heap space
+# Xmx represents the maximum size of total heap space
+
+-Xms1g
+-Xmx1g
+
+## Expert settings
+
+# Reduce the number of G1GC old-generation regions to scan during mixed GCs
+-XX:G1MixedGCCountTarget=8
+
+# Tell G1GC to be more aggressive in starting a background GC thread
+-XX:G1HeapWastePercent=5
+
+# Reduce the G1GC region size to 16MB
+-XX:G1HeapRegionSize=16m
+
+# Set the G1GC IHOP to 33 to be more aggressive about starting marking cycles
+-XX:InitiatingHeapOccupancyPercent=33
+
+## GC logging
+-Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m

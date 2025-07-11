@@ -1,0 +1,99 @@
+# 🔍 Elasticsearch Cluster Configuration for Learning Environment
+# Optimized settings for HA learning environment with 3-node cluster
+# Uses consistent HA endpoints and production-ready configurations
+
+cluster.name: "lucene-learning-cluster"
+
+# Node settings
+node.name: "${NODE_NAME:es-node}"
+node.roles: ["master", "data", "ingest"]
+
+# Network settings
+network.host: "0.0.0.0"
+http.port: 9200
+transport.port: 9300
+
+# Discovery settings for 3-node cluster
+discovery.seed_hosts: ["es-master-1", "es-master-2", "es-master-3"]
+cluster.initial_master_nodes: ["es-master-1", "es-master-2", "es-master-3"]
+
+# Memory and performance settings
+bootstrap.memory_lock: true
+indices.memory.index_buffer_size: "10%"
+indices.memory.min_index_buffer_size: "48mb"
+
+# Index settings optimized for learning
+index:
+  number_of_shards: 3
+  number_of_replicas: 1
+  refresh_interval: "5s"
+  max_result_window: 50000
+
+# Search settings
+search:
+  max_buckets: 65536
+  default_keep_alive: "5m"
+
+# Thread pool settings for learning workloads
+thread_pool:
+  search:
+    size: 4
+    queue_size: 1000
+  write:
+    size: 4
+    queue_size: 1000
+  analyze:
+    size: 1
+    queue_size: 16
+
+# Security settings (disabled for learning)
+xpack.security.enabled: false
+xpack.monitoring.enabled: false
+xpack.watcher.enabled: false
+xpack.ml.enabled: false
+
+# Logging settings
+logger:
+  org.elasticsearch.discovery: INFO
+  org.elasticsearch.cluster.service: INFO
+  org.elasticsearch.gateway: INFO
+  org.elasticsearch.http: INFO
+
+# Path settings (handled by Docker)
+path:
+  data: "/usr/share/elasticsearch/data"
+  logs: "/usr/share/elasticsearch/logs"
+
+# Learning environment specific settings
+action:
+  auto_create_index: true
+  destructive_requires_name: false
+
+# Performance optimizations for learning
+indices:
+  fielddata:
+    cache:
+      size: "20%"
+  requests:
+    cache:
+      size: "2%"
+  queries:
+    cache:
+      size: "10%"
+
+# Circuit breaker settings
+indices.breaker:
+  total.limit: "70%"
+  fielddata.limit: "40%"
+  request.limit: "40%"
+
+# Cluster settings for learning stability
+cluster:
+  routing:
+    allocation:
+      disk:
+        threshold_enabled: true
+        low_watermark: "85%"
+        high_watermark: "90%"
+        flood_stage: "95%"
+  max_shards_per_node: 1000

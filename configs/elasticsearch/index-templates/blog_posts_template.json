@@ -1,0 +1,202 @@
+{
+  "index_templates": [
+    {
+      "name": "blog_posts_template",
+      "index_patterns": ["blog_posts*", "performance_*", "learning_*"],
+      "template": {
+        "settings": {
+          "number_of_shards": 3,
+          "number_of_replicas": 1,
+          "refresh_interval": "5s",
+          "analysis": {
+            "analyzer": {
+              "blog_analyzer": {
+                "type": "custom",
+                "tokenizer": "standard",
+                "filter": ["lowercase", "stop", "snowball"]
+              },
+              "search_analyzer": {
+                "type": "custom",
+                "tokenizer": "standard", 
+                "filter": ["lowercase", "stop"]
+              },
+              "content_analyzer": {
+                "type": "custom",
+                "tokenizer": "standard",
+                "filter": ["lowercase", "stop", "stemmer"]
+              }
+            },
+            "filter": {
+              "stemmer": {
+                "type": "stemmer",
+                "language": "english"
+              }
+            }
+          }
+        },
+        "mappings": {
+          "properties": {
+            "title": {
+              "type": "text",
+              "analyzer": "blog_analyzer",
+              "search_analyzer": "search_analyzer",
+              "fields": {
+                "keyword": {
+                  "type": "keyword"
+                },
+                "suggest": {
+                  "type": "completion"
+                }
+              }
+            },
+            "content": {
+              "type": "text",
+              "analyzer": "content_analyzer",
+              "search_analyzer": "search_analyzer"
+            },
+            "author": {
+              "type": "keyword",
+              "fields": {
+                "text": {
+                  "type": "text",
+                  "analyzer": "standard"
+                }
+              }
+            },
+            "category": {
+              "type": "keyword"
+            },
+            "tags": {
+              "type": "keyword"
+            },
+            "published_date": {
+              "type": "date",
+              "format": "yyyy-MM-dd||yyyy-MM-dd HH:mm:ss||epoch_millis"
+            },
+            "view_count": {
+              "type": "integer"
+            },
+            "like_count": {
+              "type": "integer"
+            },
+            "score_boost": {
+              "type": "float"
+            },
+            "created_at": {
+              "type": "date",
+              "format": "yyyy-MM-dd HH:mm:ss||epoch_millis"
+            },
+            "updated_at": {
+              "type": "date",
+              "format": "yyyy-MM-dd HH:mm:ss||epoch_millis"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "performance_template",
+      "index_patterns": ["performance_*", "benchmark_*", "load_test_*"],
+      "template": {
+        "settings": {
+          "number_of_shards": 3,
+          "number_of_replicas": 1,
+          "refresh_interval": "10s"
+        },
+        "mappings": {
+          "properties": {
+            "timestamp": {
+              "type": "date",
+              "format": "yyyy-MM-dd HH:mm:ss||epoch_millis"
+            },
+            "operation": {
+              "type": "keyword"
+            },
+            "duration_ms": {
+              "type": "integer"
+            },
+            "success": {
+              "type": "boolean"
+            },
+            "thread_id": {
+              "type": "keyword"
+            },
+            "batch_size": {
+              "type": "integer"
+            },
+            "query_type": {
+              "type": "keyword"
+            },
+            "response_time": {
+              "type": "float"
+            },
+            "error_message": {
+              "type": "text",
+              "analyzer": "standard"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "component_templates": [
+    {
+      "name": "scoring_settings",
+      "template": {
+        "settings": {
+          "similarity": {
+            "custom_bm25": {
+              "type": "BM25",
+              "k1": 1.5,
+              "b": 0.75
+            },
+            "custom_dfr": {
+              "type": "DFR",
+              "basic_model": "g",
+              "after_effect": "l",
+              "normalization": "h2",
+              "normalization.h2.c": "3.0"
+            },
+            "learning_similarity": {
+              "type": "BM25",
+              "k1": 1.2,
+              "b": 0.5
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "learning_analyzers",
+      "template": {
+        "settings": {
+          "analysis": {
+            "analyzer": {
+              "learning_text_analyzer": {
+                "type": "custom",
+                "tokenizer": "standard",
+                "filter": [
+                  "lowercase",
+                  "stop",
+                  "snowball",
+                  "learning_synonyms"
+                ]
+              }
+            },
+            "filter": {
+              "learning_synonyms": {
+                "type": "synonym",
+                "synonyms": [
+                  "elasticsearch,es",
+                  "solr,apache solr",
+                  "opensearch,os",
+                  "lucene,apache lucene"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
